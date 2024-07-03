@@ -256,6 +256,7 @@ function remove_custom_capabilities() {
     }
 }
 //add_action('init', 'remove_custom_capabilities');
+
 // Hàm để loại bỏ ký tự escape từ chuỗi
 function remove_slashes_from_array(&$item, $key) {
     if (is_array($item)) {
@@ -279,27 +280,44 @@ function register_request_dynamic_tag_group( $dynamic_tags_manager ) {
 }
 add_action( 'elementor/dynamic_tags/register', 'register_request_dynamic_tag_group' );
 
-function register_mac_group( $dynamic_tags ) {
+function register_request_dynamic_tag_item_menu_group( $dynamic_tags ) {
     $dynamic_tags->register_group(
-        'mac-group',
+        'request-mac-item-menu',
         [
-            'title' => esc_html__( 'MAC Group', 'mac-plugin' )
+            'title' => esc_html__( 'Mac Menu Item', 'mac-plugin' )
         ]
     );
 }
-add_action( 'elementor/dynamic_tags/register', 'register_mac_group' );
+add_action( 'elementor/dynamic_tags/register', 'register_request_dynamic_tag_item_menu_group' );
 
 function register_dynamic_tag( $dynamic_tags_manager ) {
-    require_once( __DIR__ . '/dynamic-tags/mac-menu-dynamic-tag-name.php' );
-    require_once( __DIR__ . '/dynamic-tags/mac-menu-dynamic-tag-description.php' );
-    require_once( __DIR__ . '/dynamic-tags/mac-menu-dynamic-tag-price.php' );
-    require_once( __DIR__ . '/dynamic-tags/mac-menu-dynamic-tag-img.php' );
-    require_once( __DIR__ . '/dynamic-tags/mac-menu-dynamic-tag-gallery.php' );
+    require_once( __DIR__ . '/dynamic-tags/cat-menu/mac-menu-dynamic-tag-name.php' );
+    require_once( __DIR__ . '/dynamic-tags/cat-menu/mac-menu-dynamic-tag-description.php' );
+    require_once( __DIR__ . '/dynamic-tags/cat-menu/mac-menu-dynamic-tag-price.php' );
+    require_once( __DIR__ . '/dynamic-tags/cat-menu/mac-menu-dynamic-tag-img.php' );
+    require_once( __DIR__ . '/dynamic-tags/cat-menu/mac-menu-dynamic-tag-gallery.php' );
+    require_once( __DIR__ . '/dynamic-tags/cat-menu/mac-menu-dynamic-tag-heading-col.php' );
+
+    /** item menu */
+
+    require_once( __DIR__ . '/dynamic-tags/item-menu/mac-menu-dynamic-tag-item-name.php' );
+    require_once( __DIR__ . '/dynamic-tags/item-menu/mac-menu-dynamic-tag-item-description.php' );
+    require_once( __DIR__ . '/dynamic-tags/item-menu/mac-menu-dynamic-tag-item-price.php' );
+    require_once( __DIR__ . '/dynamic-tags/item-menu/mac-menu-dynamic-tag-item-img.php' );
+
 
 	$dynamic_tags_manager->register( new \Elementor_Dynamic_Tag_Mac_Menu_Name );
     $dynamic_tags_manager->register( new \Elementor_Dynamic_Tag_Mac_Menu_Description );
     $dynamic_tags_manager->register( new \Elementor_Dynamic_Tag_Mac_Menu_Price );
     $dynamic_tags_manager->register( new \Elementor_Dynamic_Tag_Mac_Menu_Img );
     $dynamic_tags_manager->register( new \Elementor_Dynamic_Tag_Mac_Menu_Gallery );
+    $dynamic_tags_manager->register( new \Elementor_Dynamic_Tag_Mac_Menu_Heading_Col );
+
+    /** item menu */
+
+    $dynamic_tags_manager->register( new \Elementor_Dynamic_Tag_Mac_Menu_Item_Name );
+    $dynamic_tags_manager->register( new \Elementor_Dynamic_Tag_Mac_Menu_Item_Description );
+    $dynamic_tags_manager->register( new \Elementor_Dynamic_Tag_Mac_Menu_Item_Price );
+    $dynamic_tags_manager->register( new \Elementor_Dynamic_Tag_Mac_Menu_Item_Img );
 }
 add_action( 'elementor/dynamic_tags/register', 'register_dynamic_tag' );

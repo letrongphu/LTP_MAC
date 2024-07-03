@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-class Elementor_Dynamic_Tag_Server_Variable extends \Elementor\Core\DynamicTags\Tag {
+class Elementor_Dynamic_Tag_Mac_Menu_Price extends \Elementor\Core\DynamicTags\Tag {
 
 	/**
 	 * Get dynamic tag name.
@@ -22,7 +22,7 @@ class Elementor_Dynamic_Tag_Server_Variable extends \Elementor\Core\DynamicTags\
 	 * @return string Dynamic tag name.
 	 */
 	public function get_name() {
-		return 'mac-menu';
+		return 'mac-menu-price';
 	}
 
 	/**
@@ -35,7 +35,7 @@ class Elementor_Dynamic_Tag_Server_Variable extends \Elementor\Core\DynamicTags\
 	 * @return string Dynamic tag title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Mac Menu', 'textdomain' );
+		return esc_html__( 'Cat Menu Price', 'mac-plugin' );
 	}
 
 	/**
@@ -74,18 +74,18 @@ class Elementor_Dynamic_Tag_Server_Variable extends \Elementor\Core\DynamicTags\
 	 * @return void
 	 */
 	protected function register_controls() {
-		$variables = [];
-
-		foreach ( array_keys( $_SERVER ) as $variable ) {
-			$variables[ $variable ] = ucwords( str_replace( '_', ' ', $variable ) );
-		}
-
+		$objmacMenu = new macMenu();
+        $results = $objmacMenu->all_cat();
+        $newArray = array();
+        foreach($results as $item ){
+            $newArray[$item->id] = $item->category_name;
+        }
 		$this->add_control(
-			'user_selected_variable',
+			'user_selected_cat_menu',
 			[
 				'type' => \Elementor\Controls_Manager::SELECT,
-				'label' => esc_html__( 'Variable', 'mac-plugin' ),
-				'options' => $variables,
+				'label' => esc_html__( 'Menu', 'mac-plugin' ),
+				'options' => $newArray,
 			]
 		);
 	}
@@ -100,18 +100,13 @@ class Elementor_Dynamic_Tag_Server_Variable extends \Elementor\Core\DynamicTags\
 	 * @return void
 	 */
 	public function render() {
-		$user_selected_variable = $this->get_settings( 'user_selected_variable' );
-
-		if ( ! $user_selected_variable ) {
+		$id = !empty($this->get_settings( 'user_selected_cat_menu' )) ? $this->get_settings( 'user_selected_cat_menu' ) :"";
+		if(!isset($id) || $id == '' ):
 			return;
-		}
-
-		if ( ! isset( $_SERVER[ $user_selected_variable ] ) ) {
-			return;
-		}
-
-		$value = $_SERVER[ $user_selected_variable ];
-		echo wp_kses_post( $value );
+		endif;
+		$objmacMenu = new macMenu();
+		$Cat = $objmacMenu->find_cat_menu($id);
+		echo wp_kses_post( $Cat[0]->price );
 	}
 
 }

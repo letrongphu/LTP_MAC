@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-class Elementor_Dynamic_Tag_Mac_Menu extends \Elementor\Core\DynamicTags\Tag {
+class Elementor_Dynamic_Tag_Mac_Menu_Item_Price extends \Elementor\Core\DynamicTags\Tag {
 
 	/**
 	 * Get dynamic tag name.
@@ -22,7 +22,7 @@ class Elementor_Dynamic_Tag_Mac_Menu extends \Elementor\Core\DynamicTags\Tag {
 	 * @return string Dynamic tag name.
 	 */
 	public function get_name() {
-		return 'mac-menu-name';
+		return 'mac-menu-item-price';
 	}
 
 	/**
@@ -35,7 +35,7 @@ class Elementor_Dynamic_Tag_Mac_Menu extends \Elementor\Core\DynamicTags\Tag {
 	 * @return string Dynamic tag title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Cat Menu Name', 'mac-plugin' );
+		return esc_html__( 'Item Menu Price', 'mac-plugin' );
 	}
 
 	/**
@@ -48,7 +48,7 @@ class Elementor_Dynamic_Tag_Mac_Menu extends \Elementor\Core\DynamicTags\Tag {
 	 * @return array Dynamic tag groups.
 	 */
 	public function get_group() {
-		return [ 'request-mac-menu' ];
+		return [ 'request-mac-item-menu' ];
 	}
 
 	/**
@@ -61,7 +61,6 @@ class Elementor_Dynamic_Tag_Mac_Menu extends \Elementor\Core\DynamicTags\Tag {
 	 * @return array Dynamic tag categories.
 	 */
 	public function get_categories() {
-		//return [ \Elementor\Modules\DynamicTags\Module::IMAGE_CATEGORY ];
 		return [ \Elementor\Modules\DynamicTags\Module::TEXT_CATEGORY ];
 	}
 
@@ -81,14 +80,19 @@ class Elementor_Dynamic_Tag_Mac_Menu extends \Elementor\Core\DynamicTags\Tag {
         foreach($results as $item ){
             $newArray[$item->id] = $item->category_name;
         }
-
-		$variables = [];
 		$this->add_control(
 			'user_selected_cat_menu',
 			[
 				'type' => \Elementor\Controls_Manager::SELECT,
 				'label' => esc_html__( 'Menu', 'mac-plugin' ),
 				'options' => $newArray,
+			]
+		);
+		$this->add_control(
+			'cat_menu_item_index',
+			[
+				'type' => \Elementor\Controls_Manager::NUMBER,
+				'label' => esc_html__( 'Index Item (ex: 1 ) ', 'mac-plugin' ),
 			]
 		);
 	}
@@ -104,9 +108,28 @@ class Elementor_Dynamic_Tag_Mac_Menu extends \Elementor\Core\DynamicTags\Tag {
 	 */
 	public function render() {
 		$id = !empty($this->get_settings( 'user_selected_cat_menu' )) ? $this->get_settings( 'user_selected_cat_menu' ) :"";
+		$index = !empty($this->get_settings( 'cat_menu_item_index' )) ? $this->get_settings( 'cat_menu_item_index' ) : "";
+		if(!isset($id) || $id == '' ):
+			return;
+		endif;
 		$objmacMenu = new macMenu();
 		$Cat = $objmacMenu->find_cat_menu($id);
-		echo wp_kses_post( $Cat[0]->category_name );
+		$Array = !empty( $Cat[0]->group_repeater) ? json_decode($Cat[0]->group_repeater, true) : [];
+		if($index !=''):
+			$i = 1;
+			foreach($Array as $key){
+				if($index == $i ):
+					if(isset($key['price-list']) && !empty($key['price-list']) ):
+						for($y= 0; $y < count($key['price-list']); $y++ ):
+							echo '<span>';
+							echo wp_kses_post( $key['price-list'][$y]['price']);
+							echo '</span>';
+						endfor;
+					endif;
+				endif;
+				$i++;
+			}
+		endif;
 	}
 
 }

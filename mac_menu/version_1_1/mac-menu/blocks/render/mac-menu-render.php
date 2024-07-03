@@ -20,10 +20,8 @@ if (!function_exists('mac_menu_elementor_render')) {
         $moduleConfigs['cat_menu_table_item_is_price'] = isset($settings['cat_menu_table_item_is_price']) ? $settings['cat_menu_table_item_is_price'] : '';
         $block_str = '';
         $block_str .= '<div class="mac-menu">';
-        $block_str .= '<div class="block-content">';
         $renderHTML = new Render_Module;
         $block_str .= $renderHTML->render($moduleConfigs);  
-        $block_str .= '</div>';
         $block_str .= '</div>';
         return $block_str;    
     }

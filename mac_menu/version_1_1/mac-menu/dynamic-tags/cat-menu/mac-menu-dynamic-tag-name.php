@@ -101,6 +101,9 @@ class Elementor_Dynamic_Tag_Mac_Menu_Name extends \Elementor\Core\DynamicTags\Ta
 	 */
 	public function render() {
 		$id = !empty($this->get_settings( 'user_selected_cat_menu' )) ? $this->get_settings( 'user_selected_cat_menu' ) :"";
+		if(!isset($id) || $id == '' ):
+			return;
+		endif;
 		$objmacMenu = new macMenu();
 		$Cat = $objmacMenu->find_cat_menu($id);
 		echo wp_kses_post( $Cat[0]->category_name );

@@ -303,6 +303,7 @@ var MAC = MAC || {};
                     }
                 });
                 $(this).disableSelection();
+
             });
         },
         sortableRepeater: function() {
@@ -314,6 +315,12 @@ var MAC = MAC || {};
                     }
                 });
                 $(this).disableSelection();
+                $(this).on('keydown', 'input, textarea', function(event) {
+                    if (event.ctrlKey && event.key === 'a') {
+                        $(this).select();
+                        event.preventDefault();
+                    }
+                });
             });
         },
         sortableRepeaterChildCat: function() {
@@ -328,6 +335,12 @@ var MAC = MAC || {};
                     }
                 });
                 $(this).disableSelection();
+                $(this).on('keydown', 'input, textarea', function(event) {
+                    if (event.ctrlKey && event.key === 'a') {
+                        $(this).select();
+                        event.preventDefault();
+                    }
+                });
             });
         },
         /*  ==================
