@@ -283,3 +283,5 @@ function remove_slashes_from_array(&$item, $key) {
 
 //     return $fields;
 // }
+
+// update gihub Version 1.0
